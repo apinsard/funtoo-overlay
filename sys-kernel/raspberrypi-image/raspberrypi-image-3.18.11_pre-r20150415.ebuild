@@ -4,7 +4,7 @@ EAPI="5"
 
 inherit mount-boot
 
-GITHUB_COMMIT="2aad6d8f703f9d899b023d31d6714eea004fc61b"
+GITHUB_COMMIT="25b436de03dd15d199efeaa2b303d728422b4748"
 
 DESCRIPTION="Raspberry PI binary kernel, modules, dtb and firmware"
 HOMEPAGE="https://github.com/raspberrypi/firmware"
