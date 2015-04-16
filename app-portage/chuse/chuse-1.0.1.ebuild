@@ -1,8 +1,8 @@
 # Distributed under the terms of the GNU General Public License v2
 
-EAPI="4-python"
+EAPI="5-progress"
 
-PYTHON_MULTIPLE_ABIS="1"
+PYTHON_ABI_TYPE="single"
 PYTHON_RESTRICTED_ABIS="2.*"
 inherit multilib python
 
@@ -26,13 +26,24 @@ src_unpack() {
 	mv "${WORKDIR}/${GITHUB_USER}-${PN}"-??????? "${S}" || die
 }
 
+src_prepare() {
+	einfo "Converting shebangs for python3..."
+	python_convert_shebangs 3 chuse
+}
+
 src_install() {
 	into /usr/
 	dosbin chuse
 	doman man/man1/chuse.1
-	dodoc ChangeLog README.md
+	dodoc ChangeLog
 }
 
-src_compile() {
-	return
+pkg_info() {
+	"${ROOT}"/usr/sbin/chuse --version
+}
+
+pkg_postinst() {
+	elog "If this is the first time you install chuse, you may have to setup"
+	elog "your package.use hierarchy pattern. For details, please see the"
+	elog "EXAMPLES section of chuse(1) manual page."
 }
