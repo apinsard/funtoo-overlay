@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE pkgmetadata SYSTEM "http://www.gentoo.org/dtd/metadata.dtd">
+<pkgmetadata>
+	<herd>funtoo</herd>
+	<maintainer>
+		<email>drobbin@funtoo.org</email>
+		<name>Daniel Robbins</name>
+		<description lang="en">Report bugs at https://bugs.funtoo.org/</description>
+	</maintainer>
+	<longdescription lang="en">Funtoo's configuration tool: ego, epro.</longdescription>
+	<upstream>
+		<maintainer status="active">
+			<email>drobbins@funtoo.org</email>
+			<name>Daniel Robbins</name>
+		</maintainer>
+		<doc lang="en">http://www.funtoo.org/Package:Ego</doc>
+		<bugs-to>https://bugs.funtoo.org/</bugs-to>
+	</upstream>
+</pkgmetadata>
