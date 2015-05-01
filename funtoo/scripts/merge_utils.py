@@ -12,6 +12,14 @@ debug = False
 
 mergeLog = open("/var/tmp/merge.log","w")
 
+def qa_build(host,build,arch_desc,subarch,head,target):
+	success = False
+	exists = subprocess.getoutput("ssh %s '[ -e /home/mirror/funtoo/%s/%s/%s/" % ( host, build, arch_desc, subarch ) + head + "/status ] && echo yep || echo nope'") == "yep"
+	if not exists:
+		status, output = subprocess.getstatusoutput("ssh %s /root/metro/scripts/ezbuild.sh %s %s %s %s " % ( host, build, arch_desc, subarch, target ) + head)
+	success = subprocess.getoutput("ssh %s cat /home/mirror/funtoo/%s/%s/%s/" % ( host, build, arch_desc, subarch )  + head + "/status") == "ok"
+	return success
+
 def headSHA1(tree):
 	head = None
 	hfile = os.path.join(tree,".git/HEAD")
@@ -109,19 +117,26 @@ class AutoGlobMask(MergeStep):
 		f.close()
 
 class ThirdPartyMirrors(MergeStep):
-	"Add funtoo's distfiles mirror as a gentoo mirror."
+	"Add funtoo's distfiles mirror, and add funtoo's mirrors as gentoo back-ups."
 
 	def run(self,tree):
 		orig = "%s/profiles/thirdpartymirrors" % tree.root
 		new = "%s/profiles/thirdpartymirrors.new" % tree.root
+		mirrors = "http://ftp.osuosl.org/pub/funtoo/distfiles http://build.funtoo.org/distfiles"
 		a = open(orig, "r")
 		b = open(new, "w")
 		for line in a:
 			ls = line.split()
 			if len(ls) and ls[0] == "gentoo":
-				b.write("gentoo\t"+ls[1]+" http://www.funtoo.org/distfiles "+" ".join(ls[2:])+"\n")
+
+				# Add funtoo mirrors as second and third Gentoo mirrors. So, try the main gentoo mirror first.
+				# If not there, maybe we forked it and the sources are removed from Gentoo's mirrors, so try
+				# ours. This allows us to easily fix mirroring issues for users.
+
+				b.write("gentoo\t"+ls[1]+" "+mirrors+" "+" ".join(ls[2:])+"\n")
 			else:
 				b.write(line)
+		b.write("funtoo %s\n" % mirrors)
 		a.close()
 		b.close()
 		os.unlink(orig)
