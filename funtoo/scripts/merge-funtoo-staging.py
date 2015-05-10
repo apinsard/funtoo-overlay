@@ -51,7 +51,8 @@ other_overlays = {
 	"progress_overlay" : SvnTree("progress", "https://gentoo-progress.googlecode.com/svn/overlays/progress"),
         "pantheon_overlay" : GitTree("pantheon", "master", "https://github.com/pimvullers/elementary.git", pull=True),
         "sabayon_for_gentoo" : GitTree("sabayon-for-gentoo", "master", "git://github.com/Sabayon/for-gentoo.git", pull=True),
-	"faustoo_overlay" : GitTree("faustoo", "master", "https://github.com/fmoro/faustoo.git", pull=True),
+        "tripsix_overlay" : GitTree("tripsix", "master", "https://github.com/666threesixes666/tripsix.git", pull=True),
+        "faustoo_overlay" : GitTree("faustoo", "master", "https://github.com/fmoro/faustoo.git", pull=True),
 	"sera_overlay" : GitTree("sera", "master", "git://anongit.gentoo.org/dev/sera.git", pull=True),
 	"vmware_overlay" : GitTree("vmware", "master", "git://anongit.gentoo.org/proj/vmware.git", pull=True)
 }
@@ -95,13 +96,14 @@ else:
 
 base_steps = [
 	GitCheckout("master"),
-	SyncFromTree(gentoo_staging_r, exclude=["/metadata/cache/**", "ChangeLog", "dev-util/metro"]),
+	SyncFromTree(gentoo_staging_r, exclude=["/metadata/cache/**", "ChangeLog", "dev-util/metro", "skel.ChangeLog"]),
 	SyncDir(funtoo_overlay.root,"licenses"),
 	SyncDir(funtoo_overlay.root,"metadata"),
 	SyncFiles(funtoo_overlay.root, {
 		"COPYRIGHT.txt":"COPYRIGHT.txt",
 		"LICENSE.txt":"LICENSE.txt",
-		"README.rst":"README.rst"
+		"README.rst":"README.rst",
+		"header.txt":"header.txt",
 	}),
 ]
 
@@ -175,7 +177,8 @@ ebuild_modifications = [
 	InsertEbuilds(other_overlays["foo_overlay"], select="all", skip=["sys-fs/mdev-bb", "sys-fs/mdev-like-a-boss", "media-sound/deadbeef", "media-video/handbrake"], replace=["app-shells/rssh"]),
 	InsertEbuilds(funtoo_overlays["plex_overlay"], select = [ "media-tv/plex-media-server" ], skip=None, replace=True),
 	InsertEbuilds(other_overlays["causes_overlay"], select=[ "media-sound/renoise", "media-sound/renoise-demo", "sys-fs/smdev", "x11-wm/dwm" ], skip=None, replace=True),
-	InsertEbuilds(other_overlays["sabayon_for_gentoo"], select=["sci-geosciences/grass", "app-admin/equo", "app-admin/matter", "sys-apps/entropy", "sys-apps/entropy-server", "sys-apps/entropy-client-services","app-admin/rigo", "sys-apps/rigo-daemon", "sys-apps/magneto-core", "x11-misc/magneto-gtk", "x11-misc/magneto-gtk3", "kde-misc/magneto-kde", "app-misc/magneto-loader"], replace=True),
+	InsertEbuilds(other_overlays["sabayon_for_gentoo"], select=["app-admin/equo", "app-admin/matter", "sys-apps/entropy", "sys-apps/entropy-server", "sys-apps/entropy-client-services","app-admin/rigo", "sys-apps/rigo-daemon", "sys-apps/magneto-core", "x11-misc/magneto-gtk", "x11-misc/magneto-gtk3", "kde-misc/magneto-kde", "app-misc/magneto-loader"], replace=True),
+        InsertEbuilds(other_overlays["tripsix_overlay"], select=["media-sound/rakarrack"], skip=None, replace=True, merge=False),
 	InsertEbuilds(other_overlays["progress_overlay"], select="all", skip=None, replace=True, merge=False),
 	InsertEbuilds(funtoo_overlays["funtoo_gnome"], select="all", skip=None, replace=True, merge=["dev-python/pyatspi", "dev-python/pygobject", "dev-util/gdbus-codegen", "x11-libs/vte"]),
 	InsertEbuilds(funtoo_overlays["funtoo_media"], select="all", skip=None, replace=True),
@@ -225,3 +228,5 @@ if xmlfile:
 	a=open(xmlfile,"wb")
 	etree.ElementTree(xml_out).write(a, encoding='utf-8', xml_declaration=True, pretty_print=True)
 	a.close()
+print("merge-funtoo-staging.py completed successfully.")
+sys.exit(0)
