@@ -1,6 +1,3 @@
-# FL2324 FL-2320: mask pf-sources explicitly wanted unstable gcc.
->sys-kernel/pf-sources-4.0_p1
-
 # FL-2312: mask gnupg-2.1, breaks gnome apps
 >app-crypt/gnupg-2.0.27-r1
 
@@ -23,11 +20,6 @@
 # FL-1937
 # Cautionary mask dev-lang/swig-3.0.3, failures reported.
 >dev-lang/swig-3.0.2
-
-# Protect newest automake and autoconf
->sys-devel/automake-1.14.1
->sys-devel/autoconf-2.69
-
 
 # Protect against beta OpenRC
 >=sys-apps/openrc-0.12.5
